@@ -185,7 +185,7 @@ export async function toCoinbaseSmartAccount(
 
       if (owner.type === 'address') throw new Error('owner cannot sign')
       // Try to sign with signTypedData first if the owner has this capability
-      const typedDataSignature = await signWithTypedData({
+      const typedDataSignature = await signReplaySafeTypedData({
         hash,
         owner,
         chainId: client.chain!.id,
@@ -243,7 +243,7 @@ export async function toCoinbaseSmartAccount(
       if (owner.type === 'address') throw new Error('owner cannot sign')
 
       // Try to sign with signTypedData first if the owner has this capability
-      const typedDataSignature = await signWithTypedData({
+      const typedDataSignature = await signReplaySafeTypedData({
         hash: hashTypedData({
           domain,
           message,
@@ -294,7 +294,7 @@ export async function toCoinbaseSmartAccount(
 
       if (owner.type === 'address') throw new Error('owner cannot sign')
       // Try to sign with signTypedData first if the owner has this capability
-      const typedDataSignature = await signWithTypedData({
+      const typedDataSignature = await signReplaySafeTypedData({
         hash,
         owner,
         chainId: client.chain!.id,
@@ -333,7 +333,7 @@ export async function toCoinbaseSmartAccount(
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /** @internal */
-function getCoinbaseSmartWalletTypedData({
+function toReplaySafeTypedData({
   address,
   chainId,
   hash,
@@ -365,7 +365,7 @@ function getCoinbaseSmartWalletTypedData({
 }
 
 /** @internal */
-export async function signWithTypedData({
+export async function signReplaySafeTypedData({
   hash,
   owner,
   chainId,
@@ -376,7 +376,7 @@ export async function signWithTypedData({
 }): Promise<Hex | undefined> {
   // Check if this is a non-WebAuthn account that supports signTypedData
   if (owner.type !== 'webAuthn' && owner.signTypedData) {
-    const typedData = getCoinbaseSmartWalletTypedData({
+    const typedData = toReplaySafeTypedData({
       address: owner.address,
       chainId,
       hash,
@@ -413,9 +413,7 @@ export function toReplaySafeHash({
   chainId,
   hash,
 }: { address: Address; chainId: number; hash: Hash }) {
-  return hashTypedData(
-    getCoinbaseSmartWalletTypedData({ address, chainId, hash }),
-  )
+  return hashTypedData(toReplaySafeTypedData({ address, chainId, hash }))
 }
 
 /** @internal */
