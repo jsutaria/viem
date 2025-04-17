@@ -210,7 +210,7 @@ export async function toCoinbaseSmartAccount(
       if (owner.type === 'address') throw new Error('owner cannot sign')
 
       // Try to sign with signTypedData first if the owner has this capability
-      const typedDataSignature = await signWithTypedData({
+      const typedDataSignature = await signReplaySafeTypedData({
         hash: hashMessage(message),
         owner,
         chainId: client.chain!.id,
@@ -293,18 +293,7 @@ export async function toCoinbaseSmartAccount(
       })
 
       if (owner.type === 'address') throw new Error('owner cannot sign')
-      // Try to sign with signTypedData first if the owner has this capability
-      const typedDataSignature = await signReplaySafeTypedData({
-        hash,
-        owner,
-        chainId: client.chain!.id,
-      })
-      if (typedDataSignature) {
-        return wrapSignature({
-          ownerIndex,
-          signature: typedDataSignature,
-        })
-      }
+
       const signature = await sign({ hash, owner })
 
       return wrapSignature({
