@@ -1,5 +1,11 @@
 # viem
 
+## 2.55.5
+
+### Patch Changes
+
+- [#4863](https://github.com/wevm/viem/pull/4863) [`b6f7349221d4d3b51e4094634fa2839b5a448c24`](https://github.com/wevm/viem/commit/b6f7349221d4d3b51e4094634fa2839b5a448c24) Thanks [@jxom](https://github.com/jxom)! - `viem/tempo`: Updated multisig implementation.
+
 ## 2.55.4
 
 ### Patch Changes
